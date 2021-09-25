@@ -27,20 +27,25 @@ const Content = ({ parts }) => {
   )
 }
 
-/*
 //Total renders the total number of exercises.
-const Total = (props) => {
-  return (
-      <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
-  )
+const Total = ({ parts }) => {
+    const exercises = parts.map(part => part.exercises)
+
+    const reducer = (previousValue, currentValue) => previousValue + currentValue;
+
+    const total = exercises.reduce(reducer)
+
+    return (
+      <p>Number of exercises {total}</p>
+    )
 }
-*/
 
 const Course = ({ course }) => { 
   return (
     <div>
       <Header course={course} />
       <Content parts={course.parts}/>
+      <Total parts={course.parts}/>
     </div>
   )
 }
