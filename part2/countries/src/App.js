@@ -40,6 +40,20 @@ const Country = ({name}) => {
 }
 
 const Countries = ({countriesToShow}) => {
+    const [showCountry, setShowCountry] = useState({showCountry: "", showCountries: []})
+
+
+    if(showCountry.showCountry !== "") { 
+        if(showCountry.showCountries !== countriesToShow) { 
+            setShowCountry({showCountry: "", showCountries: []})
+        } else { 
+            return ( 
+                <Country name={showCountry.showCountry} />
+            )
+        }
+    }
+
+
     console.log(countriesToShow.length)
     if (countriesToShow.length > 10) { 
         return ( 
@@ -52,7 +66,12 @@ const Countries = ({countriesToShow}) => {
             <div>
                 <ul>
                     {countriesToShow.map(country => 
-                        <li key={country}>{country}</li>
+                        <div>
+                            <li key={country}>{country}</li>
+                            <button onClick={() => setShowCountry({showCountry: country, showCountries: countriesToShow})}>
+                                show
+                            </button>
+                        </div>
                     )}
                 </ul>
             </div>
