@@ -1,5 +1,42 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+const api_key = process.env.REACT_APP_API_KEY
+
+
+const Weather = ({ name }) => { 
+    const [weather, setWeather] =useState({temperature: ""})
+    console.log("weather")
+
+    const params = {
+      access_key: api_key,
+      query: `${name}`
+    }
+    console.log(params)
+    //console.log(name)
+
+
+    useEffect(() => { 
+        axios.get('http://api.weatherstack.com/current', {params})
+          .then(response => {
+            const apiResponse = response.data;
+              console.log(apiResponse)
+              //console.log(`weatherresponse, ${apiResponse.current.temperature}`)
+              setWeather({temperature: apiResponse.current.temperature})
+
+            //console.log(`Current temperature in ${apiResponse.location.name} is ${apiResponse.current.temperature}℃`);
+          }).catch(error => {
+            console.log(error);
+          });
+    }, [])
+
+    console.log(weather)
+    return(
+        <div>
+            current temperature in name is {weather.temperature}°C
+        </div>
+    )
+
+}
 
 const Country = ({name}) => {
     const [country, setNewCountry] = useState({name: "", area: "", capital: "", flag: "", languages: []})
@@ -35,6 +72,14 @@ const Country = ({name}) => {
                 ))}
             </ul>
             <img src={country.flag} />
+            <h2>weather in {country.capital}</h2>
+            {country.capital ? ( 
+                <Weather name={country.capital}/>
+            ) : ( 
+                <span/>
+            )
+            }
+
         </div>
     )
 }
@@ -89,6 +134,7 @@ const App = () => {
     const [countries, setCountries] = useState([])
     const [newFilter, setNewFilter] = useState("")
 
+
     useEffect(() => { 
         console.log('effect')
         axios
@@ -107,7 +153,8 @@ const App = () => {
         console.log(newFilter)
     }
 
-    const countriesToShow =  countries.filter(country => country.includes(newFilter))
+    const countriesToShow =  countries.filter(country => country.toLowerCase().includes(newFilter))
+    console.log(countriesToShow)
 
     return (
         <div>
