@@ -11,14 +11,26 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
 
+    /*
     useEffect(() => { 
         console.log('useEffect')
         personService
             .getAll()
             .then(initialPersons => { 
+                console.log(initialPersons)
                 setPersons(initialPersons)
             })
             
+    }, [])
+    */
+
+    useEffect(() => { 
+        console.log('useEffect')
+        axios
+            .get('http://localhost:3001/persons')
+            .then(response => { 
+                setPersons(response.data)
+            })
     }, [])
     console.log('render', persons.length, 'persons')
 
@@ -49,11 +61,16 @@ const App = () => {
 
   };
 
+    const deletePersonFromState = (id) => { 
+        setPersons(persons.filter(person => person.id !== id))
+    }
+
   const handlePersonChange = (event) => {
     setNewName(event.target.value)
   }
 
   const handleNumberChange = (event) => {
+    console.log(event.target.value)
     setNewNumber(event.target.value)
   }
 
@@ -64,6 +81,8 @@ const App = () => {
 
   const personsToShow = persons.filter(person => person.name.includes(newFilter))
 
+      //<Persons personsToShow={personsToShow} deletePersonFromState={deletePersonFromState}/>
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -71,7 +90,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm addPerson={addPerson} newName={newName} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} hand />
       <h2>Numbers</h2>
-      <Persons personsToShow={personsToShow}/>
+      <Persons personsToShow={personsToShow}  deletePersonFromState={deletePersonFromState}/>
     </div>
   );
 };

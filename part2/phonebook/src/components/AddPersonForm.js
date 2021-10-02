@@ -1,6 +1,8 @@
 import React from "react";
 
+
 const PersonForm = ({ addPerson, newName, handlePersonChange, newNumber, handleNumberChange }) => {
+    console.log("personform")
     return (
         <form onSubmit={addPerson}>
             <div>
