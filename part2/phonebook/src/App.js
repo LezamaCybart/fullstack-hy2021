@@ -43,12 +43,27 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1
+      //id: persons.length + 1
     };
 
 
     if (names.includes(personObject.name)) {
-      window.alert(`{newName} is already added to phonebook`)
+        if (window.confirm("Change number of existing contact?")) { 
+            const contact = persons.filter(person => person.name === personObject.name);
+            const updatedPersons = persons.map(person => (person.name === contact[0].name) ? personObject : person)
+
+            console.log(updatedPersons)
+
+            personService
+                .update(contact[0].id, personObject)
+                .then(returnedPerson => { 
+                  setPersons(updatedPersons);
+                  setNewName("");
+                  setNewNumber("");
+                })
+        }
+
+      //window.alert(`{newName} is already added to phonebook`)
     } else { 
         personService
             .create(personObject)
