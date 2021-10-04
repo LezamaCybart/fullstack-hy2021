@@ -5,11 +5,36 @@ import Filter from "./components/Filter";
 import Persons from "./components/Persons";
 import personService from "./services/persons"
 
+const Notification = ({ message }) => { 
+
+    const succesStyle = { 
+        color: 'green',
+        background: 'lightgrey',
+        fontSize: '20px',
+        boderStyle: 'solid',
+        borderRadius: '5px',
+        padding: '10px',
+        marginBottom: '10px'
+    }
+
+    if (message === null) { 
+        return null
+    }
+
+    return ( 
+        <div style={succesStyle}>
+            {message}
+        </div>
+    )
+
+}
+
 const App = () => {
-  const [persons, setPersons] = useState([])
-  const [newName, setNewName] = useState("");
-  const [newNumber, setNewNumber] = useState("");
-  const [newFilter, setNewFilter] = useState("");
+    const [persons, setPersons] = useState([])
+    const [newName, setNewName] = useState("");
+    const [newNumber, setNewNumber] = useState("");
+    const [newFilter, setNewFilter] = useState("");
+    const [message, setMessage] = useState("")
 
     /*
     useEffect(() => { 
@@ -57,9 +82,13 @@ const App = () => {
             personService
                 .update(contact[0].id, personObject)
                 .then(returnedPerson => { 
+                    setMessage(`Updated ${personObject.name} information`)
                   setPersons(updatedPersons);
                   setNewName("");
                   setNewNumber("");
+                    setTimeout(() => { 
+                        setMessage(null)
+                    }, 5000)
                 })
         }
 
@@ -68,9 +97,13 @@ const App = () => {
         personService
             .create(personObject)
             .then(returnedPerson => { 
+                    setMessage(`Added ${personObject.name}`)
                   setPersons(persons.concat(returnedPerson));
                   setNewName("");
                   setNewNumber("");
+                    setTimeout(() => { 
+                        setMessage(null)
+                    }, 5000)
             })
     }
 
@@ -87,6 +120,7 @@ const App = () => {
   const handleNumberChange = (event) => {
     console.log(event.target.value)
     setNewNumber(event.target.value)
+      //setMessage()
   }
 
   const handleFilterChange = (event) => {
@@ -101,6 +135,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm addPerson={addPerson} newName={newName} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} hand />
